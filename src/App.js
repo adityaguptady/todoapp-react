@@ -1,58 +1,42 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
 const App = () =>
-{
+{ 
   const [todo, setTodo] = useState([]);
 
-  function handleClick(event)
+  function addTodo(event)
   {
     event.preventDefault()
-    console.log("-------------------handleClick is clicked-------------------")
-    let newTodo = document.getElementById("addTodo").value
-    let newTodoObject = {
-      id: todo.length,
-      text: newTodo,
-      completed: false,
-    }
-    //console.log("Text readed: "+newTodo)
-    // console.log(newTodoObject)
-    //console.log(todo)
-    todo.push(newTodoObject)
-    //setTodo([...todo].concat(newTodoObject))
+    console.log("---------------addTodo---------------")
+    let newTodo = document.getElementById('todoInput').value
+    console.log("Reded the new todo: "+newTodo)
+    console.log(todo)
+    todo.push(newTodo)
+    console.log(todo)
     setTodo([...todo])
-    console.log(todo)
-    document.getElementById("addTodo").value = ""
   }
 
-  function deleteTodo(id)
+  function deleteTodo(event)
   {
-    //event.preventDefault()
-    console.log("-------------------Delete button called!-------------------")
-    console.log(todo)
-    let udatedTodo = todo.filter((tempTodo)=>  tempTodo.id != id)
-    console.log("Update Array: "+udatedTodo)
-    setTodo(udatedTodo)
-    console.log(todo)
+    event.preventDefault()
+    console.log("---------------Delete---------------")
+    
   }
-  
-  return <div>
-       <h1>ToDo list</h1>
-       <form onSubmit={handleClick}>
-         <input type="text" id='addTodo'/>
-         <button type='submit'>Add To-do</button>
-       </form>
-       <div>
-          {todo.map((tempTodo) =>
-            {
-              return <div id="todoListID">
-                <div id="todoTextId">{tempTodo.text}</div>
-                <button onClick={()=>deleteTodo(tempTodo.id)}>Delete</button>
-                </div>
-            })
-          }          
-      </div>
-    </div>
 
+  return <div>
+          <h1>To-do List</h1>
+          <form onSubmit={addTodo}>
+            <input type='text' id='todoInput'/>
+            <button type='submit'>Add Todo</button>
+          </form>
+          {todo.map((tempTodo)=>
+          {
+            return <div>
+                <div>{tempTodo}</div>
+                <button onClick={deleteTodo}>Delete</button>
+              </div>
+          })}
+         </div>
 }
 
 /* Class implementation of React component and To-do app using states */
