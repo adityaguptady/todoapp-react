@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 const App = () =>
 { 
   const [todo, setTodo] = useState([]);
+  const [todoEditing, setTodoEditing] = useState(-1)
 
   function addTodo(event)
   {
@@ -11,20 +12,45 @@ const App = () =>
     let newTodo = document.getElementById('todoInput').value
     console.log("Reded the new todo: "+newTodo)
     console.log(todo)
-    todo.push(newTodo)
-    console.log(todo)
-    setTodo([...todo])
+    addTodoData(todo.length, newTodo)
   }
 
-  function deleteTodo(event)
+  function addMockData()
   {
-    event.preventDefault()
+    addTodoData(todo.length, "Need to complete assignement")
+    addTodoData(todo.length, "Todo 2")
+    addTodoData(todo.length, "Todo 3")
+    addTodoData(todo.length, "Todo 4")
+    addTodoData(todo.length, "Todo 5")
+    addTodoData(todo.length, "Todo 6")
+  }
+
+  function addTodoData(id, text)
+  {
+    let tempTodo = {
+      id: id,
+      text: text,
+    }
+    todo.push(tempTodo)
+    console.log(todo)
+    setTodo([...todo])
+    document.getElementById('todoInput').value = ""
+  }
+
+  function deleteTodo(id)
+  {
     console.log("---------------Delete---------------")
-    
+    console.log("id: "+id)
+    let updateTodo = todo.filter(element=>
+      {
+        return element.id != id
+      })
+    setTodo([...updateTodo])
   }
 
   return <div>
           <h1>To-do List</h1>
+          <button onClick={()=>addMockData()}>Mock Data</button>
           <form onSubmit={addTodo}>
             <input type='text' id='todoInput'/>
             <button type='submit'>Add Todo</button>
@@ -32,8 +58,28 @@ const App = () =>
           {todo.map((tempTodo)=>
           {
             return <div>
-                <div>{tempTodo}</div>
-                <button onClick={deleteTodo}>Delete</button>
+                <div>
+                  {
+                    todoEditing == 0 ? 
+                    tempTodo.text : 
+                    ( todoEditing == tempTodo.id ? 
+                      <input type='text' id='todoEditingInput' value={tempTodo.text}/> :
+                      tempTodo.text
+                    )
+                  }          
+                </div>
+                <button onClick={()=>deleteTodo(tempTodo.id)}>Delete</button>
+                { 
+                  todoEditing == 0 ? 
+                  <button onClick={()=>setTodoEditing(tempTodo.id)}>Edit</button> : 
+                  ( 
+                    todoEditing == tempTodo.id ?
+                    <button >Save to-do</button> :
+                    <button onClick={()=>setTodoEditing(tempTodo.id)}>Edit</button>
+                  )
+                }
+                
+                
               </div>
           })}
          </div>
