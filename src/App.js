@@ -1,139 +1,68 @@
-import React, { useState } from 'react';
+import { useState } from "react"
 
-const App = () =>
-{ 
-  const [todo, setTodo] = useState([]);
-  const [todoEditing, setTodoEditing] = useState(-1)
+const App = ()=>
+{
+  const [todo, setTodo] = useState([])
+  const [counter, setCounter] = useState(1)
 
-  function addTodo(event)
+  function addTodo()
   {
-    event.preventDefault()
-    console.log("---------------addTodo---------------")
-    let newTodo = document.getElementById('todoInput').value
-    console.log("Reded the new todo: "+newTodo)
-    console.log(todo)
-    addTodoData(todo.length, newTodo)
+    console.log("------------addTodo------------")
+    let tempTodo = document.getElementById("todoInput").value
+    console.log("tempTodo: "+tempTodo)
+
+    addToArray(tempTodo, false)
+    document.getElementById("todoInput").value = ""
   }
 
-  function addMockData()
+  function addToArray(text, completed)
   {
-    addTodoData(todo.length, "Need to complete assignement")
-    addTodoData(todo.length, "Todo 2")
-    addTodoData(todo.length, "Todo 3")
-    addTodoData(todo.length, "Todo 4")
-    addTodoData(todo.length, "Todo 5")
-    addTodoData(todo.length, "Todo 6")
-  }
-
-  function addTodoData(id, text)
-  {
-    let tempTodo = {
-      id: id,
+    let tempTodoObject = {
+      id: counter,
       text: text,
+      completed: completed
     }
-    todo.push(tempTodo)
+    todo.push(tempTodoObject)
     console.log(todo)
     setTodo([...todo])
-    document.getElementById('todoInput').value = ""
+    setCounter(counter+1)
   }
 
   function deleteTodo(id)
   {
-    console.log("---------------Delete---------------")
-    console.log("id: "+id)
-    let updateTodo = todo.filter(element=>
+    console.log("----------------deleteTodo----------------")
+    let tempTodo = todo.filter(element =>
       {
         return element.id != id
       })
-    setTodo([...updateTodo])
+    setTodo([...tempTodo])
+  }
+
+  function mock()
+  {
+    addToArray("Todo 1", true)
+  addToArray("Todo 2", false)
+  addToArray("Todo 3", false)
+  addToArray("Todo 4", false)
   }
 
   return <div>
-          <h1>To-do List</h1>
-          <button onClick={()=>addMockData()}>Mock Data</button>
-          <form onSubmit={addTodo}>
-            <input type='text' id='todoInput'/>
-            <button type='submit'>Add Todo</button>
-          </form>
-          {todo.map((tempTodo)=>
-          {
-            return <div>
-                <div>
-                  {
-                    todoEditing == 0 ? 
-                    tempTodo.text : 
-                    ( todoEditing == tempTodo.id ? 
-                      <input type='text' id='todoEditingInput' value={tempTodo.text}/> :
-                      tempTodo.text
-                    )
-                  }          
+    <h1>To-do Application</h1>
+    <button onClick={()=>mock()}>Mock</button>
+    <input type="text" id="todoInput" placeholder="Enter todo here"/>
+    <button onClick={()=>addTodo()}>Add To-do</button>
+    {
+      todo.map(element => 
+      {
+        return  <div>
+                  { element.completed ? <input type="checkbox" checked></input> : <input type="checkbox"></input>}
+                  
+                  {element.text+"   "} 
+                  <button onClick={()=>deleteTodo(element.id)}>Delete</button>
                 </div>
-                <button onClick={()=>deleteTodo(tempTodo.id)}>Delete</button>
-                { 
-                  todoEditing == 0 ? 
-                  <button onClick={()=>setTodoEditing(tempTodo.id)}>Edit</button> : 
-                  ( 
-                    todoEditing == tempTodo.id ?
-                    <button >Save to-do</button> :
-                    <button onClick={()=>setTodoEditing(tempTodo.id)}>Edit</button>
-                  )
-                }
-                
-                
-              </div>
-          })}
-         </div>
+      })
+    }
+  </div>
 }
-
-/* Class implementation of React component and To-do app using states */
-
-// class App extends React.Component
-// {
-//   state = {todo: []}
-
-//   constructor(props)
-//   {
-//     super(props)
-//     this.handleClick = this.handleClick.bind(this)
-//   }
-  
-//   handleClick(event)
-//   {
-//     event.preventDefault()
-//     //console.log("handleClick is clicked")
-//     let newTodo = document.getElementById("addTodo").value
-//     let newTodoObject = {
-//       id: new Date().getTime(),
-//       text: newTodo,
-//     }
-//     //console.log("Text readed: "+newTodo)
-//     // console.log(newTodoObject)
-//     // //console.log(this.state)
-//     //this.setState({counter:this.state.counter+1})
-//     this.state.todo.push(newTodoObject)
-//     this.setState({todo:this.state.todo})
-//     console.log(this.state)
-//     document.getElementById("addTodo").value = ""
-//   }
-
-  
-//   render()
-//   {
-//     return <div>
-//       <h1>ToDo list</h1>
-//       <form onSubmit={this.handleClick}>
-//         <input type="text" id='addTodo'/>
-//         <button type='submit'>Add To-do</button>
-//       </form>
-//       <div>
-//         {this.state.todo.map((tempTodo) =>
-//           {
-//             return <div>{tempTodo.text}</div>
-//           })
-//         }
-//       </div>
-//     </div>
-//   }
-// }
 
 export default App;
