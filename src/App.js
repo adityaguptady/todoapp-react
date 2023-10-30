@@ -1,49 +1,63 @@
 import { useState } from "react"
-
 const App = ()=>
 {
   const [todo, setTodo] = useState([])
-  const [counter, setCounter] = useState(1)
+  
 
   function addTodo()
   {
     console.log("------------addTodo------------")
     let tempTodo = document.getElementById("todoInput").value
     console.log("tempTodo: "+tempTodo)
-
-    addToArray(tempTodo, false)
+    
+    if(todo.length>0)
+      addToArray(todo[todo.length-1].id+1,tempTodo, false)
+    else
+      addToArray(0,tempTodo, false)
     document.getElementById("todoInput").value = ""
   }
 
-  function addToArray(text, completed)
+  function addToArray(id, text, completed)
   {
     let tempTodoObject = {
-      id: counter,
+      id: id,
       text: text,
       completed: completed
     }
     todo.push(tempTodoObject)
     console.log(todo)
     setTodo([...todo])
-    setCounter(counter+1)
   }
 
   function deleteTodo(id)
   {
     console.log("----------------deleteTodo----------------")
+    console.log("id: "+id)
+    console.log(todo)
     let tempTodo = todo.filter(element =>
       {
         return element.id != id
       })
+    console.log(tempTodo)
     setTodo([...tempTodo])
   }
 
   function mock()
   {
-    addToArray("Todo 1", true)
-  addToArray("Todo 2", false)
-  addToArray("Todo 3", false)
-  addToArray("Todo 4", false)
+    if(todo.length >0)
+    {
+      addToArray(todo[todo.length-1].id+1,"Todo 1", true)
+      addToArray(todo[todo.length-1].id+1,"Todo 2", false)
+      addToArray(todo[todo.length-1].id+1,"Todo 3", false)
+      addToArray(todo[todo.length-1].id+1,"Todo 4", false)
+    }
+    else
+    {
+      addToArray(0, "Todo 1", true)
+      addToArray(todo[todo.length-1].id+1,"Todo 2", false)
+      addToArray(todo[todo.length-1].id+1,"Todo 3", false)
+      addToArray(todo[todo.length-1].id+1,"Todo 4", false)
+    }
   }
 
   return <div>
@@ -55,10 +69,18 @@ const App = ()=>
       todo.map(element => 
       {
         return  <div>
-                  { element.completed ? <input type="checkbox" checked></input> : <input type="checkbox"></input>}
-                  
-                  {element.text+"   "} 
-                  <button onClick={()=>deleteTodo(element.id)}>Delete</button>
+                  { 
+                    element.completed ? 
+                    <div>
+                      <input type="checkbox" checked/> 
+                      <s>{element.text+"   "} </s> 
+                    </div> : 
+                    <div>
+                      <input type="checkbox"></input>
+                      {element.text+"   "}
+                      <button onClick={()=>deleteTodo(element.id)}>Delete</button>
+                    </div>
+                  }
                 </div>
       })
     }
