@@ -2,8 +2,8 @@ import { useState } from "react"
 const App = ()=>
 {
   const [todo, setTodo] = useState([])
+  const [editingFlag, setEditing] = useState(-1)
   
-
   function addTodo()
   {
     console.log("------------addTodo------------")
@@ -60,6 +60,43 @@ const App = ()=>
     }
   }
 
+  function checkListener(id)
+  {
+    console.log("checkListener")
+    console.log(todo)
+    todo.map(element => 
+      {
+        if(element.id == id)
+        {
+          element.completed = !element.completed
+        }
+        return element
+      })
+    console.log(todo)
+    setTodo([...todo])
+  }
+
+  function editTodo(id)
+  {
+    console.log("editTodo")
+    setEditing(id)
+  }
+
+  function updateTodo()
+  {
+    console.log("updateTodo")
+    console.log("editingFlag: "+editingFlag)
+    let tempTodo = todo.map(element => 
+      {
+        if(element.id == editingFlag)
+        {
+          element.text = document.getElementById("editTodo").value
+        }
+        return element
+      })
+      setTodo([...tempTodo])
+  }
+
   return <div>
     <h1>To-do Application</h1>
     <button onClick={()=>mock()}>Mock</button>
@@ -71,15 +108,29 @@ const App = ()=>
         return  <div>
                   { 
                     element.completed ? 
+                    //completed todo
                     <div>
-                      <input type="checkbox" checked/> 
+                      <input type="checkbox" onClick={()=>checkListener(element.id)} checked/> 
                       <s>{element.text+"   "} </s> 
                     </div> : 
-                    <div>
-                      <input type="checkbox"></input>
-                      {element.text+"   "}
-                      <button onClick={()=>deleteTodo(element.id)}>Delete</button>
-                    </div>
+                    //incomplete todo
+                    ( element.id == editingFlag ? 
+                      //editing frontend
+                      <div>
+                        <input type="checkbox" onClick={()=>checkListener(element.id)} ></input>
+                        <input type="text" value={element.text} placeholder="Update Todo here" id="editTodo"/>
+                        <button onClick={()=>deleteTodo(element.id)}>Delete</button>
+                        <button onClick={()=>updateTodo()}>Save Todo</button>
+                      </div>  : 
+                      //default frotend
+                      <div>
+                        <input type="checkbox" onClick={()=>checkListener(element.id)} ></input>
+                        {element.text+"   "}
+                        <button onClick={()=>deleteTodo(element.id)}>Delete</button>
+                        <button onClick={()=>editTodo(element.id)}>Edit</button>
+                      </div>  
+                    )
+                    
                   }
                 </div>
       })
