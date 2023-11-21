@@ -1,4 +1,5 @@
 import { useState } from "react"
+import MyHeading from "./Components/MyHeading"
 const App = ()=>
 {
   const [todo, setTodo] = useState([])
@@ -87,18 +88,21 @@ const App = ()=>
     console.log("updateTodo")
     console.log("editingFlag: "+editingFlag)
     let tempTodo = todo.map(element => 
+    {
+      if(element.id == editingFlag)
       {
-        if(element.id == editingFlag)
-        {
-          element.text = document.getElementById("editTodo").value
-        }
-        return element
-      })
-      setTodo([...tempTodo])
+        element.text = document.getElementById("editTodo").value
+      }
+      return element
+    })
+    setEditing(-1)
+    setTodo([...tempTodo])
   }
 
   return <div>
+    <MyHeading title="Welcome to the To-do app"/>
     <h1>To-do Application</h1>
+    
     <button onClick={()=>mock()}>Mock</button>
     <input type="text" id="todoInput" placeholder="Enter todo here"/>
     <button onClick={()=>addTodo()}>Add To-do</button>
@@ -118,7 +122,7 @@ const App = ()=>
                       //editing frontend
                       <div>
                         <input type="checkbox" onClick={()=>checkListener(element.id)} ></input>
-                        <input type="text" value={element.text} placeholder="Update Todo here" id="editTodo"/>
+                        <input type="text" Value={element.text} placeholder="Update Todo here" id="editTodo"/>
                         <button onClick={()=>deleteTodo(element.id)}>Delete</button>
                         <button onClick={()=>updateTodo()}>Save Todo</button>
                       </div>  : 
